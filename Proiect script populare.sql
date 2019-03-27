@@ -48,14 +48,14 @@ CREATE TABLE trenuri (
     Stare_Tren Varchar2(20)
 )
 /
-alter table "PROIECT"."BILETE" add constraint fk_bilete_tren foreign key("ID_TREN") references "TRENURI"("ID_TREN");
-alter table "PROIECT"."BILETE" add constraint fk_bilete_cumparate foreign key("ID_STATIE_CUMPARARE") references "STATII"("ID_STATIE");
-alter table "PROIECT"."BILETE" add constraint fk_statie_urcare foreign key("ID_STATIE_URCARE") references "STATII"("ID_STATIE");
-alter table "PROIECT"."BILETE" add constraint fk_statie_coborare foreign key("ID_STATIE_COBORARE") references "STATII"("ID_STATIE");
+alter table "BILETE" add constraint fk_bilete_tren foreign key("ID_TREN") references "TRENURI"("ID_TREN");
+alter table "BILETE" add constraint fk_bilete_cumparate foreign key("ID_STATIE_CUMPARARE") references "STATII"("ID_STATIE");
+alter table "BILETE" add constraint fk_statie_urcare foreign key("ID_STATIE_URCARE") references "STATII"("ID_STATIE");
+alter table "BILETE" add constraint fk_statie_coborare foreign key("ID_STATIE_COBORARE") references "STATII"("ID_STATIE");
 
-alter table "PROIECT"."MENTENANTA" add constraint fk_reparare_tren foreign key("ID_TREN") references "TRENURI"("ID_TREN");
-alter table "PROIECT"."MENTENANTA" add constraint fk_locatie_reparare_tren foreign key("ID_STATIE") references "STATII"("ID_STATIE");
+alter table "MENTENANTA" add constraint fk_reparare_tren foreign key("ID_TREN") references "TRENURI"("ID_TREN");
+alter table "MENTENANTA" add constraint fk_locatie_reparare_tren foreign key("ID_STATIE") references "STATII"("ID_STATIE");
 
-alter table "PROIECT"."TRENURI" add constraint fk_statie_plecare foreign key("ID_STATIE_PLECARE") references "STATII"("ID_STATIE");
-alter table "PROIECT"."TRENURI" add constraint fk_statie_sosire foreign key("ID_STATIE_SOSIRE") references "STATII"("ID_STATIE");
-alter table "PROIECT"."TRENURI" add constraint fk_statie_domiciliu foreign key("ID_STATIE_DOMICILIU") references "STATII"("ID_STATIE");
+alter table "TRENURI" add constraint fk_statie_plecare foreign key("ID_STATIE_PLECARE") references "STATII"("ID_STATIE");
+alter table "TRENURI" add constraint fk_statie_sosire foreign key("ID_STATIE_SOSIRE") references "STATII"("ID_STATIE");
+alter table "TRENURI" add constraint fk_statie_domiciliu foreign key("ID_STATIE_DOMICILIU") references "STATII"("ID_STATIE");
