@@ -64,6 +64,7 @@ alter table "TRENURI" add constraint fk_statie_domiciliu foreign key("ID_STATIE_
 
 alter table Bilete add constraint ck_equal_locatii_cumparare check (id_statie_urcare <> id_statie_coborare);
 alter table Trenuri add constraint ck_equal_locatii_tren check (id_statie_plecare <> id_statie_sosire);
+alter table BILETE add constraint un unique("ID_TREN","VAGONUL","LOCUL","DATA_BILET"); 
 
 SET SERVEROUTPUT ON;
 
@@ -75,7 +76,7 @@ DECLARE
   
 BEGIN
   DBMS_OUTPUT.PUT_LINE('Se insereaza datele..');
-  FOR v_i IN 1..1000 LOOP
+  FOR v_i IN 1..319 LOOP
     v_nume := lista_statii(TRUNC(DBMS_RANDOM.VALUE(0, lista_statii.count)) + 1);
     
     INSERT INTO statii VALUES(v_i, v_nume);
