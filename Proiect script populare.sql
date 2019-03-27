@@ -23,7 +23,8 @@ CREATE TABLE bilete (
 	id_statie_coborare int not null,
     id_tren INT not null,
     vagonul int not null,
-    locul int not null check (locul between 11 and 111)
+    locul int not null check (locul between 11 and 111),
+    data_bilet Date
 )
 /
 
@@ -59,3 +60,6 @@ alter table "MENTENANTA" add constraint fk_locatie_reparare_tren foreign key("ID
 alter table "TRENURI" add constraint fk_statie_plecare foreign key("ID_STATIE_PLECARE") references "STATII"("ID_STATIE");
 alter table "TRENURI" add constraint fk_statie_sosire foreign key("ID_STATIE_SOSIRE") references "STATII"("ID_STATIE");
 alter table "TRENURI" add constraint fk_statie_domiciliu foreign key("ID_STATIE_DOMICILIU") references "STATII"("ID_STATIE");
+
+alter table Bilete add constraint ck_equal_locatii_cumparare check (id_statie_urcare <> id_statie_coborare);
+alter table Trenuri add constraint ck_equal_locatii_tren check (id_statie_plecare <> id_statie_sosire);
