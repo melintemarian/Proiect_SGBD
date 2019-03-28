@@ -1,12 +1,12 @@
-Functii
-	oferireListaStatie(int id_statie) - ofera o lista cu trenurile ce pleaca sau sosesc in statie
-	oferireListaReparatie(int id_tren) - ofera o lista a repartiilor trecute efectuate la trenul respectiv
-	oferireListaBilete(int id_tren, date dataSelectata) - ofera o lista a tuturor biletelor cumparate pe un tren intro anumita zi
-	oferireListaStatiiCalatorie(int id_tren) - ofera o lista a tuturor statiilor unde trenul se opreste
-	oferireListaBileteCumparateDinStatie(int id_statie, date dataSelectata) - ofera o lista a tuturor biletelor cumparate de la o anumita statie intr-o anumita zi
-	oferireInformatiiTren(int id_tren) - ofera informatiile despre un anumit tren/traseu
-Proceduri
-	reparareStare(int id_tren) - modifica starea trenului (ex: Operational/In reparatii)
-	adaugaIntarziere(int id_tren, date intarziere) - adauga m minute intarziere unui traseu
-	cuparareBilet(int id_tren, date dataCumparare) - cumpara un bilet pentru un tren selectat in ziua specificata
-	adaugareMentenanta(intn id_tren) - adaugam un nou raport de mentenanta
+Funcții:
+	oferireListaStatie(int id_statie) - ofera o listă a trenurilor ce pleacă sau sosesc în stație
+	oferireListaReparatie(int id_tren) - ofera o listă a reparațiilor trecute efectuate la trenul respectiv
+	oferireListaBilete(int id_tren, date dataSelectata) - oferă o listă a tuturor biletelor cumpărate pe un tren într-o anumită zi
+	oferireListaStatiiCalatorie(int id_tren) - oferă o listă a tuturor stațiilor unde trenul se oprește
+	oferireListaBileteCumparateDinStatie(int id_statie, date dataSelectata) - oferă o listă a tuturor biletelor cumpărate de la o anumită stație într-o anumită zi
+	oferireInformatiiTren(int id_tren) - oferă informațiile despre un anumit tren/traseu
+Proceduri:
+	reparareStare(int id_tren) - modifică starea trenului (ex: Operațional/În reparații)
+	adaugaIntarziere(int id_tren, date intarziere) - adaugă m minute întârziere unui traseu
+	cumparareBilet(int id_tren, date dataCumparare) - cumpără un bilet pentru un tren selectat în ziua specificată
+	adaugareMentenanta(int id_tren) - adăugăm un nou raport de mentenanță
