@@ -84,6 +84,9 @@ DECLARE
   v_data_bilet DATE;
   v_data_adaugare DATE;
   v_data_eliberare DATE;
+  v_statie_plecare INT;
+  v_statie_sosire INT;
+  v_statie_domiciliu INT;
   
 BEGIN
   
@@ -96,7 +99,7 @@ BEGIN
   END LOOP;
 
   DBMS_OUTPUT.PUT_LINE('Statiile au fost inserate.');
-  
+
   DBMS_OUTPUT.PUT_LINE('Se insereaza trenurile..');
   
   FOR v_i IN 1..1300 LOOP --Numarul estimat de trenuri puse in circulatie zilnic
@@ -123,18 +126,28 @@ BEGIN
     
     v_stare_tren := lista_stari_tren(TRUNC(DBMS_RANDOM.VALUE(0, lista_stari_tren.count)) + 1);
     
-    INSERT INTO trenuri VALUES(v_i, v_ora_plecare, v_ora_sosire, DBMS_RANDOM.VALUE(1, 1001), DBMS_RANDOM.VALUE(1, 1001), v_intarziere, DBMS_RANDOM.VALUE(1, 1001), v_numar_vagoane, v_stare_tren);
+    LOOP
+      SELECT * INTO v_statie_plecare FROM (SELECT id_statie FROM statii ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM = 1;
+      SELECT * INTO v_statie_sosire FROM (SELECT id_statie FROM statii ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM = 1;
+      EXIT WHEN v_statie_plecare <> v_statie_sosire;
+    END LOOP;
+    
+    SELECT * INTO v_statie_domiciliu FROM (SELECT id_statie FROM statii ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM = 1;
+    
+    INSERT INTO trenuri VALUES(v_i, v_ora_plecare, v_ora_sosire, v_statie_plecare, v_statie_sosire, v_intarziere, v_statie_domiciliu, v_numar_vagoane, v_stare_tren);
   END LOOP;
   
   DBMS_OUTPUT.PUT_LINE('Trenurile au fost inserate.');
+END;
   
+  /*
   DBMS_OUTPUT.PUT_LINE('Se insereaza biletele..');
   
   FOR v_i IN 1..10000 LOOP
     
     v_data_bilet := SYSDATE - TRUNC(DBMS_RANDOM.VALUE(0, 1000));
     
-    INSERT INTO bilete VALUES(v_i, DBMS_RANDOM.VALUE(1, 1001), DBMS_RANDOM.VALUE(1, 1001), DBMS_RANDOM.VALUE(1, 1001), DBMS_RANDOM.VALUE(1, 1301), DBMS_RANDOM.VALUE(1, 12), DBMS_RANDOM.VALUE(11, 112), v_data_bilet);
+    INSERT INTO bilete VALUES(v_i, DBMS_RANDOM.VALUE(1, 1001), DBMS_RANDOM.VALUE(1, 320), DBMS_RANDOM.VALUE(1, 320), DBMS_RANDOM.VALUE(1, 1301), DBMS_RANDOM.VALUE(1, 12), DBMS_RANDOM.VALUE(11, 112), v_data_bilet);
   END LOOP;
     
     DBMS_OUTPUT.PUT_LINE('Biletele au fost inserate.');
@@ -146,8 +159,9 @@ BEGIN
       v_data_adaugare := SYSDATE - TRUNC(DBMS_RANDOM.VALUE(0, 1000));
       v_data_eliberare := SYSDATE - TRUNC(DBMS_RANDOM.VALUE(0, 1000));
       
-      INSERT INTO mentenanta VALUES(v_i, DBMS_RANDOM.VALUE(1, 1301), DBMS_RANDOM.VALUE(1, 1001), v_data_adaugare, v_data_eliberare);
+      INSERT INTO mentenanta VALUES(v_i, DBMS_RANDOM.VALUE(1, 1301), DBMS_RANDOM.VALUE(1, 320), v_data_adaugare, v_data_eliberare);
     END LOOP;
     
     DBMS_OUTPUT.PUT_LINE('Procesele de mentenanta au fost inserate.');
 END;
+*/
