@@ -90,7 +90,7 @@ BEGIN
   DBMS_OUTPUT.PUT_LINE('Se insereaza statiile..');
   
   FOR v_i IN 1..319 LOOP
-    v_nume_statie := lista_statii(TRUNC(DBMS_RANDOM.VALUE(0, lista_statii.count)) + 1);
+    v_nume_statie := lista_statii(v_i);
     
     INSERT INTO statii VALUES(v_i, v_nume_statie);
   END LOOP;
