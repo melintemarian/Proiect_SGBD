@@ -1,0 +1,12 @@
+Functii
+	oferireListaStatie(int id_statie) - ofera o lista cu trenurile ce pleaca sau sosesc in statie
+	oferireListaReparatie(int id_tren) - ofera o lista a repartiilor trecute efectuate la trenul respectiv
+	oferireListaBilete(int id_tren, date dataSelectata) - ofera o lista a tuturor biletelor cumparate pe un tren intro anumita zi
+	oferireListaStatiiCalatorie(int id_tren) - ofera o lista a tuturor statiilor unde trenul se opreste
+	oferireListaBileteCumparateDinStatie(int id_statie, date dataSelectata) - ofera o lista a tuturor biletelor cumparate de la o anumita statie intr-o anumita zi
+	oferireInformatiiTren(int id_tren) - ofera informatiile despre un anumit tren/traseu
+Proceduri
+	reparareStare(int id_tren) - modifica starea trenului (ex: Operational/In reparatii)
+	adaugaIntarziere(int id_tren, date intarziere) - adauga m minute intarziere unui traseu
+	cuparareBilet(int id_tren, date dataCumparare) - cumpara un bilet pentru un tren selectat in ziua specificata
+	adaugareMentenanta(intn id_tren) - adaugam un nou raport de mentenanta
