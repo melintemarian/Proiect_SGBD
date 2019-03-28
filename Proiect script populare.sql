@@ -20,7 +20,7 @@ CREATE TABLE bilete (
     id_bilet INT NOT NULL PRIMARY KEY,
     id_statie_cumparare int not null,
     id_statie_urcare int not null,
-	id_statie_coborare int not null,
+    id_statie_coborare int not null,
     id_tren INT not null,
     vagonul int not null,
     locul int not null check (locul between 11 and 111),
@@ -87,6 +87,12 @@ DECLARE
   v_statie_plecare INT;
   v_statie_sosire INT;
   v_statie_domiciliu INT;
+  v_statie_cumparare INT;
+  v_statie_urcare INT;
+  v_statie_coborare INT;
+  v_bilet_tren INT;
+  v_mentenanta_tren INT;
+  v_mentenanta_statie INT;
   
 BEGIN
   
@@ -138,20 +144,28 @@ BEGIN
   END LOOP;
   
   DBMS_OUTPUT.PUT_LINE('Trenurile au fost inserate.');
-END;
   
-  /*
   DBMS_OUTPUT.PUT_LINE('Se insereaza biletele..');
   
   FOR v_i IN 1..10000 LOOP
     
     v_data_bilet := SYSDATE - TRUNC(DBMS_RANDOM.VALUE(0, 1000));
     
-    INSERT INTO bilete VALUES(v_i, DBMS_RANDOM.VALUE(1, 1001), DBMS_RANDOM.VALUE(1, 320), DBMS_RANDOM.VALUE(1, 320), DBMS_RANDOM.VALUE(1, 1301), DBMS_RANDOM.VALUE(1, 12), DBMS_RANDOM.VALUE(11, 112), v_data_bilet);
-  END LOOP;
+    SELECT * INTO v_statie_cumparare FROM (SELECT id_statie FROM statii ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM = 1;
     
-    DBMS_OUTPUT.PUT_LINE('Biletele au fost inserate.');
+    LOOP
+      SELECT * INTO v_statie_urcare FROM (SELECT id_statie FROM statii ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM = 1;
+      SELECT * INTO v_statie_coborare FROM (SELECT id_statie FROM statii ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM = 1;
+      EXIT WHEN v_statie_urcare <> v_statie_coborare;
+    END LOOP;
+    
+    SELECT * INTO v_bilet_tren FROM (SELECT id_tren FROM trenuri ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM = 1;
+    
+    INSERT INTO bilete VALUES(v_i, v_statie_cumparare, v_statie_urcare, v_statie_coborare, v_bilet_tren, DBMS_RANDOM.VALUE(1, 12), DBMS_RANDOM.VALUE(11, 111), v_data_bilet);
+  END LOOP;
   
+    DBMS_OUTPUT.PUT_LINE('Biletele au fost inserate.');
+
     DBMS_OUTPUT.PUT_LINE('Se insereaza procesele de mentenanta..');
     
     FOR v_i IN 1..1000 LOOP
@@ -159,9 +173,12 @@ END;
       v_data_adaugare := SYSDATE - TRUNC(DBMS_RANDOM.VALUE(0, 1000));
       v_data_eliberare := SYSDATE - TRUNC(DBMS_RANDOM.VALUE(0, 1000));
       
-      INSERT INTO mentenanta VALUES(v_i, DBMS_RANDOM.VALUE(1, 1301), DBMS_RANDOM.VALUE(1, 320), v_data_adaugare, v_data_eliberare);
+      SELECT * INTO v_mentenanta_tren FROM (SELECT id_tren FROM trenuri ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM = 1;
+      
+      SELECT * INTO v_mentenanta_statie FROM (SELECT id_statie FROM statii ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM = 1;
+      
+      INSERT INTO mentenanta VALUES(v_i, v_mentenanta_tren, v_mentenanta_statie, v_data_adaugare, v_data_eliberare);
     END LOOP;
     
     DBMS_OUTPUT.PUT_LINE('Procesele de mentenanta au fost inserate.');
 END;
-*/
