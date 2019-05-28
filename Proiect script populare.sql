@@ -1,6 +1,6 @@
 DROP TABLE statii CASCADE CONSTRAINTS
 /
-DROP TABLE bilete CASCADE CONSTRAINTS
+DROP TABLE bilete
 /
 DROP TABLE mentenanta CASCADE CONSTRAINTS
 /
@@ -126,7 +126,7 @@ BEGIN
 
         for v_i in 1..10000 loop
             select numar_vagoane into v_vagoane from traseu where id_traseu=v_i;
-            v_data1:= TO_DATE(TRUNC(DBMS_RANDOM.VALUE(TO_CHAR(DATE '2000-01-01','J'),TO_CHAR(SYSDATE,'J'))),'J');
+            v_data1:= TO_DATE(TRUNC(DBMS_RANDOM.VALUE(TO_CHAR(DATE '2010-01-01','J'),TO_CHAR(SYSDATE,'J'))),'J');
                 v_increment_loc:=11;
                 v_increment_vagon:=1;
                 v_nr_locuri_ocupate:= DBMS_RANDOM.VALUE(20,v_vagoane*100);
