@@ -1,13 +1,12 @@
-DROP TABLE trenuri CASCADE CONSTRAINTS
-/
 DROP TABLE statii CASCADE CONSTRAINTS
 /
 DROP TABLE bilete CASCADE CONSTRAINTS
 /
 DROP TABLE mentenanta CASCADE CONSTRAINTS
 /
-
-CREATE OR REPLACE TYPE listTrainStation AS VARRAY(20) OF Int
+DROP TABLE traseu CASCADE CONSTRAINTS
+/
+DROP TABLE locomotiva CASCADE CONSTRAINTS
 /
 
 CREATE TABLE statii (
@@ -18,167 +17,129 @@ CREATE TABLE statii (
 
 CREATE TABLE bilete (
     id_bilet INT NOT NULL PRIMARY KEY,
+    id_traseu int not null,
     id_statie_cumparare int not null,
-    id_statie_urcare int not null,
-    id_statie_coborare int not null,
-    id_tren INT not null,
     vagonul int not null,
     locul int not null check (locul between 11 and 111),
-    data_bilet Date
+    ziua Date not null
 )
 /
 
 Create Table mentenanta (
     id_reparare INT NOT NULL PRIMARY KEY,
-    id_tren INT,
+    id_locomotiva INT,
     id_statie INT,
-    data_adaugare Date,
+    data_adaugare date,
     data_eliberare Date
 )
 /
 
-CREATE TABLE trenuri (
-    id_tren INT NOT NULL PRIMARY KEY,
+CREATE TABLE traseu (
+    id_traseu INT NOT NULL PRIMARY KEY,
     ora_plecare date not null,
     ora_sosire date not null,
     id_statie_plecare int not null,
     id_statie_sosire int not null,
-    intarziere date,
-    id_statie_domiciliu Int not null,
+    intarziere int,
+    id_locomotiva int not null,
     numar_vagoane INT check (numar_vagoane between 1 and 11),
-    Stare_Tren Varchar2(20)
+    Stare_Tren Varchar2(30)
 )
 /
-alter table "BILETE" add constraint fk_bilete_tren foreign key("ID_TREN") references "TRENURI"("ID_TREN");
-alter table "BILETE" add constraint fk_bilete_cumparate foreign key("ID_STATIE_CUMPARARE") references "STATII"("ID_STATIE");
-alter table "BILETE" add constraint fk_statie_urcare foreign key("ID_STATIE_URCARE") references "STATII"("ID_STATIE");
-alter table "BILETE" add constraint fk_statie_coborare foreign key("ID_STATIE_COBORARE") references "STATII"("ID_STATIE");
 
-alter table "MENTENANTA" add constraint fk_reparare_tren foreign key("ID_TREN") references "TRENURI"("ID_TREN");
+Create table locomotiva (
+    id_locomotiva INT not null primary key,
+    id_statie_domiciliu int not null
+)
+/
+
+alter table "LOCOMOTIVA" add constraint fk_statie_domiciliu foreign key ("ID_STATIE_DOMICILIU") references "STATII"("ID_STATIE");
+
+alter table "TRASEU" add constraint fk_statie_plecare foreign key("ID_STATIE_PLECARE") references "STATII"("ID_STATIE");
+alter table "TRASEU" add constraint fk_statie_sosire foreign key("ID_STATIE_SOSIRE") references "STATII"("ID_STATIE");
+alter table "TRASEU" add constraint fk_locomotiva foreign key ("ID_LOCOMOTIVA") references "LOCOMOTIVA"("ID_LOCOMOTIVA");
+
+alter table "BILETE" add constraint fk_bilete_traseu foreign key("ID_TRASEU") references "TRASEU"("ID_TRASEU");
+alter table "BILETE" add constraint fk_bilete_cumparate foreign key("ID_STATIE_CUMPARARE") references "STATII"("ID_STATIE");
+
+alter table "MENTENANTA" add constraint fk_reparare_tren foreign key("ID_LOCOMOTIVA") references "LOCOMOTIVA"("ID_LOCOMOTIVA");
 alter table "MENTENANTA" add constraint fk_locatie_reparare_tren foreign key("ID_STATIE") references "STATII"("ID_STATIE");
 
-alter table "TRENURI" add constraint fk_statie_plecare foreign key("ID_STATIE_PLECARE") references "STATII"("ID_STATIE");
-alter table "TRENURI" add constraint fk_statie_sosire foreign key("ID_STATIE_SOSIRE") references "STATII"("ID_STATIE");
-alter table "TRENURI" add constraint fk_statie_domiciliu foreign key("ID_STATIE_DOMICILIU") references "STATII"("ID_STATIE");
+alter table TRASEU add constraint ck_equal_locatii_tren check (id_statie_plecare <> id_statie_sosire);
+--alter table BILETE add constraint bilet_unic unique("ID_TRASEU","ID_STATIE_CUMPARARE","VAGONUL","LOCUL","ZIUA");
 
-alter table Bilete add constraint ck_equal_locatii_cumparare check (id_statie_urcare <> id_statie_coborare);
-alter table Trenuri add constraint ck_equal_locatii_tren check (id_statie_plecare <> id_statie_sosire);
-alter table BILETE add constraint un unique("ID_TREN","VAGONUL","LOCUL","DATA_BILET");
-
-SET SERVEROUTPUT ON;
 
 DECLARE
-  TYPE varr IS VARRAY(1000) OF VARCHAR2(255);
-  
-  lista_statii varr := varr('Abrud', 'Adjud', 'Agnita', 'Aiud', 'Alba Iulia', 'Ale?d', 'Alexandria', 'Amara', 'Anina', 'Aninoasa', 'Arad', 'Ardud', 'Avrig', 'Azuga', 'Babadag', 'B?beni', 'Bac?u', 'Baia de Aram?', 'Baia Arie?', 'Baia Mare', 'Baia Sprie', 'B?icoi', 'B?ile Govora', 'B?ile Herculane', 'B?ile Ol?ne?ti', 'B?ile Tu?nad', 'B?ile?ti', 'B?lan', 'B?lce?ti', 'Bal?', 'Baraolt', 'B�rlad', 'Bechet', 'Beclean', 'Beiu?', 'Berbe?ti', 'Bere?ti', 'Bicaz', 'Bistri?a', 'Blaj', 'Boc?a', 'Bolde?ti-Sc?eni', 'Bolintin-Vale', 'Bor?a', 'Borsec', 'Boto?ani', 'Brad', 'Bragadiru', 'Br?ila', 'Bra?ov', 'Breaza', 'Brezoi', 'Bro?teni', 'Bucecea', 'Bucure?ti', 'Bude?ti', 'Buftea', 'Buhu?i', 'Bumbe?ti-Jiu', 'Bu?teni', 'Buz?u', 'Buzia?', 'Cajvana', 'Calafat', 'C?lan', 'C?l?ra?i', 'C?lim?ne?ti', 'C�mpeni', 'C�mpia Turzii', 'C�mpina', 'C�mpulung Moldovenesc', 'C�mpulung', 'Caracal', 'Caransebe?', 'Carei', 'Cavnic', 'C?z?ne?ti', 'Cehu Silvaniei', 'Cernavod?', 'Chi?ineu-Cri?', 'Chitila', 'Ciacova', 'Cisn?die', 'Cluj-Napoca', 'Codlea', 'Com?ne?ti', 'Comarnic', 'Constan?a', 'Cop?a Mic?', 'Corabia', 'Coste?ti', 'Covasna', 'Craiova', 'Cristuru Secuiesc', 'Cugir', 'Curtea Arge?', 'Curtici', 'D?buleni', 'Darabani', 'D?rm?ne?ti', 'Dej', 'Deta', 'Deva', 'Dolhasca', 'Dorohoi', 'Dr?g?ne?ti-Olt', 'Dr?g??ani', 'Dragomire?ti', 'Drobeta-Turnu Severin', 'Dumbr?veni', 'Eforie', 'F?g?ra?', 'F?get', 'F?lticeni', 'F?urei', 'Fete?ti', 'Fieni', 'Fierbin?i-T�rg', 'Filia?i', 'Fl?m�nzi', 'Foc?ani', 'Frasin', 'Fundulea', 'G?e?ti', 'Gala?i', 'G?taia', 'Geoagiu', 'Gheorgheni', 'Gherla', 'Ghimbav', 'Giurgiu', 'Gura Humorului', 'H�rl?u', 'H�r?ova', 'Ha?eg', 'Horezu', 'Huedin', 'Hunedoara', 'Hu?i', 'Ianca', 'Ia?i', 'Iernut', 'Ineu', '�nsur??ei', '�ntorsura Buz?ului', 'Isaccea', 'Jibou', 'Jimbolia', 'Lehliu Gar?', 'Lipova', 'Liteni', 'Livada', 'Ludu?', 'Lugoj', 'Lupeni', 'M?cin', 'M?gurele', 'Mangalia', 'M?r??e?ti', 'Marghita', 'Medgidia', 'Media?', 'Miercurea Ciuc', 'Miercurea Nirajului', 'Miercurea Sibiului', 'Mih?ile?ti', 'Mili??u?i', 'Mioveni', 'Mizil', 'Moine?ti', 'Moldova Nou?', 'Moreni', 'Motru', 'Murfatlar', 'Murgeni', 'N?dlac', 'N?s?ud', 'N?vodari', 'Negre?ti', 'Negre?ti-Oa?', 'Negru Vod?', 'Nehoiu', 'Novaci', 'Nucet', 'Ocna Mure?', 'Ocna Sibiului', 'Ocnele Mari', 'Odobe?ti', 'Odorheiu Secuiesc', 'Olteni?a', 'One?ti', 'Oradea', 'Or??tie', 'Oravi?a', 'Or?ova', 'O?elu Ro?u', 'Otopeni', 'Ovidiu', 'Panciu', 'P�ncota', 'Pantelimon', 'Pa?cani', 'P?t�rlagele', 'Pecica', 'Petrila', 'Petro?ani', 'Piatra Neam?', 'Piatra-Olt', 'Pite?ti', 'Ploie?ti', 'Plopeni', 'Podu Iloaiei', 'Pogoanele', 'Pope?ti-Leordeni', 'Potcoava', 'Predeal', 'Pucioasa', 'R?cari', 'R?d?u?i', 'R�mnicu S?rat', 'R�mnicu V�lcea', 'R�?nov', 'Reca?', 'Reghin', 'Re?i?a', 'Roman', 'Ro?iorii Vede', 'Rovinari', 'Roznov', 'Rupea', 'S?cele', 'S?cueni', 'Salcea', 'S?li?te', 'S?li?tea Sus', 'Salonta', 'S�ngeorgiu P?dure', 'S�ngeorz-B?i', 'S�nnicolau Mare', 'S�ntana', 'S?rma?u', 'Satu Mare', 'S?veni', 'Scornice?ti', 'Sebe?', 'Sebi?', 'Segarcea', 'Seini', 'Sf�ntu Gheorghe', 'Sibiu', 'Sighetu Marma?iei', 'Sighi?oara', 'Simeria', '?imleu Silvaniei', 'Sinaia', 'Siret', 'Sl?nic', 'Sl?nic-Moldova', 'Slatina', 'Slobozia', 'Solca', '?omcuta Mare', 'Sovata', '?tef?ne?ti, Arge?', '?tef?ne?ti, Boto?ani', '?tei', 'Strehaia', 'Suceava', 'Sulina', 'T?lmaciu', '??nd?rei', 'T�rgovi?te', 'T�rgu Bujor', 'T�rgu C?rbune?ti', 'T�rgu Frumos', 'T�rgu Jiu', 'T�rgu L?pu?', 'T�rgu Mure?', 'T�rgu Neam?', 'T�rgu Ocna', 'T�rgu Secuiesc', 'T�rn?veni', 'T??nad', 'T?u?ii-M?gher?u?', 'Techirghiol', 'Tecuci', 'Teiu?', '?icleni', 'Timi?oara', 'Tismana', 'Titu', 'Topli?a', 'Topoloveni', 'Tulcea', 'Turceni', 'Turda', 'Turnu M?gurele', 'Ulmeni', 'Ungheni', 'Uricani', 'Urla?i', 'Urziceni', 'Valea lui Mihai', 'V?lenii Munte', 'V�nju Mare', 'Va?c?u', 'Vaslui', 'Vatra Dornei', 'Vicovu Sus', 'Victoria', 'Videle', 'Vi?eu Sus', 'Vl?hi?a', 'Voluntari', 'Vulcan', 'Zal?u', 'Z?rne?ti', 'Zimnicea', 'Zlatna');
-  lista_stari_tren varr := varr('Functional', 'Avariat', 'Nefunctional', 'Necunoscut');
-  
-  --v_tren_id INT;
-  --v_nume_tren VARCHAR2(8); -- Variabile care pot fi implementate ca obiectiv secundar, descrierea mai jos
-  v_ora_plecare DATE;
-  v_ora_sosire DATE;
-  v_intarziere DATE;
-  v_numar_vagoane INT;
-  v_stare_tren VARCHAR2(50);
-  v_nume_statie VARCHAR2(255);
-  v_data_bilet DATE;
-  v_data_adaugare DATE;
-  v_data_eliberare DATE;
-  v_statie_plecare INT;
-  v_statie_sosire INT;
-  v_statie_domiciliu INT;
-  v_statie_cumparare INT;
-  v_statie_urcare INT;
-  v_statie_coborare INT;
-  v_bilet_tren INT;
-  v_mentenanta_tren INT;
-  v_mentenanta_statie INT;
-  
+  TYPE varr iS VARRAY(1000) OF VARCHAR2(255);
+  lista_statii varr := varr('Abrud','Adjud','Agnita','Aiud','Alba Iulia','Aleșd','Alexandria','Amara','Anina','Aninoasa','Arad','Ardud','Avrig','Azuga','Babadag','Băbeni','Bacău','Baia de Aramă','Baia de Arieș','Baia Mare','Baia Sprie','Băicoi','Băile Govora','Băile Herculane','Băile Olănești','Băile Tușnad','Băilești','Bălan','Bălcești','Balș','Baraolt','Bârlad','Bechet','Beclean','Beiuș','Berbești','Berești','Bicaz','Bistrița','Blaj','Bocșa','Boldești-Scăeni','Bolintin-Vale','Borșa','Borsec','Botoșani','Brad','Bragadiru','Brăila','Brașov','Breaza','Brezoi','Broșteni','Bucecea','București','Budești','Buftea','Buhuși','Bumbești-Jiu','Bușteni','Buzău','Buziaș','Cajvana','Calafat','Călan','Călărași','Călimănești','Câmpeni','Câmpia Turzii','Câmpina','Câmpulung Moldovenesc','Câmpulung','Caracal','Caransebeș','Carei','Cavnic','Căzănești','Cehu Silvaniei','Cernavodă','Chișineu-Criș','Chitila','Ciacova','Cisnădie','Cluj-Napoca','Codlea','Comănești','Comarnic','Constanța','Copșa Mică','Corabia','Costești','Covasna','Craiova','Cristuru Secuiesc','Cugir','Curtea de Argeș','Curtici','Dăbuleni','Darabani','Dărmănești','Dej','Deta','Deva','Dolhasca','Dorohoi','Drăgănești-Olt','Drăgășani','Dragomirești','Drobeta-Turnu Severin','Dumbrăveni','Eforie','Făgăraș','Făget','Fălticeni','Făurei','Fetești','Fieni','Fierbinți-Târg','Filiași','Flămânzi','Focșani','Frasin','Fundulea','Găești','Galați','Gătaia','Geoagiu','Gheorgheni','Gherla','Ghimbav','Giurgiu','Gura Humorului','Hârlău','Hârșova','Hațeg','Horezu','Huedin','Hunedoara','Huși','Ianca','Iași','Iernut','Ineu','Însurăței','Întorsura Buzăului','Isaccea','Jibou','Jimbolia','Lehliu Gară','Lipova','Liteni','Livada','Luduș','Lugoj','Lupeni','Măcin','Măgurele','Mangalia','Mărășești','Marghita','Medgidia','Mediaș','Miercurea Ciuc','Miercurea Nirajului','Miercurea Sibiului','Mihăilești','Milișăuți','Mioveni','Mizil','Moinești','Moldova Nouă','Moreni','Motru','Murfatlar','Murgeni','Nădlac','Năsăud','Năvodari','Negrești','Negrești-Oaș','Negru Vodă','Nehoiu','Novaci','Nucet','Ocna Mureș','Ocna Sibiului','Ocnele Mari','Odobești','Odorheiu Secuiesc','Oltenița','Onești','Oradea','Orăștie','Oravița','Orșova','Oțelu Roșu','Otopeni','Ovidiu','Panciu','Pâncota','Pantelimon','Pașcani','Pătârlagele','Pecica','Petrila','Petroșani','Piatra Neamț','Piatra-Olt','Pitești','Ploiești','Plopeni','Podu Iloaiei','Pogoanele','Popești-Leordeni','Potcoava','Predeal','Pucioasa','Răcari','Rădăuți','Râmnicu Sărat','Râmnicu Vâlcea','Râșnov','Recaș','Reghin','Reșița','Roman','Roșiorii de Vede','Rovinari','Roznov','Rupea','Săcele','Săcueni','Salcea','Săliște','Săliștea de Sus','Salonta','Sângeorgiu de Pădure','Sângeorz-Băi','Sânnicolau Mare','Sântana','Sărmașu','Satu Mare','Săveni','Scornicești','Sebeș','Sebiș','Segarcea','Seini','Sfântu Gheorghe','Sibiu','Sighetu Marmației','Sighișoara','Simeria','Șimleu Silvaniei','Sinaia','Siret','Slănic','Slănic-Moldova','Slatina','Slobozia','Solca','Șomcuta Mare','Sovata','Ștefănești, Argeș','Ștefănești, Botoșani','Ștei','Strehaia','Suceava','Sulina','Tălmaciu','Țăndărei','Târgoviște','Târgu Bujor','Târgu Cărbunești','Târgu Frumos','Târgu Jiu','Târgu Lăpuș','Târgu Mureș','Târgu Neamț','Târgu Ocna','Târgu Secuiesc','Târnăveni','Tășnad','Tăuții-Măgherăuș','Techirghiol','Tecuci','Teiuș','Țicleni','Timișoara','Tismana','Titu','Toplița','Topoloveni','Tulcea','Turceni','Turda','Turnu Măgurele','Ulmeni','Ungheni','Uricani','Urlați','Urziceni','Valea lui Mihai','Vălenii de Munte','Vânju Mare','Vașcău','Vaslui','Vatra Dornei','Vicovu de Sus','Victoria','Videle','Vișeu de Sus','Vlăhița','Voluntari','Vulcan','Zalău','Zărnești','Zimnicea','Zlatna');
+  v_nume VARCHAR2(255);
+  v_data1 date;
+  v_data2 date;
+  v_adresa1 int;
+  v_adresa2 int;
+    v_ora1 date;
+    v_ora2 date;
+    v_vagoane int;
+    v_random int;
+    v_increment int;
+    v_increment_vagon int;
+    v_increment_loc int;
+    v_nr_locuri_ocupate int;
 BEGIN
-  
-  DBMS_OUTPUT.PUT_LINE('Se insereaza statiile..');
-  
+    v_increment:=1;
+  DBMS_OUTPUT.PUT_LINE('Se insereaza datele..');
+  -- Se insereaza Stațiile (3199 la numar)
   FOR v_i IN 1..319 LOOP
-    v_nume_statie := lista_statii(v_i);
-    
-    INSERT INTO statii VALUES(v_i, v_nume_statie);
+    v_nume := lista_statii(v_i);
+    INSERT INTO statii VALUES(v_i, v_nume);
   END LOOP;
 
-  DBMS_OUTPUT.PUT_LINE('Statiile au fost inserate.');
+  -- Se insereaza 3000 de locomotive
+    For v_i in 1..3000 loop
+        insert into locomotiva values(v_i,TRUNC(DBMS_RANDOM.Value(1,319)));
+    end loop;
+  -- Se inserează 10000 de rapoarte de reparare
+    For v_i in 1..10000 loop
+        v_data1:= TO_DATE(TRUNC(DBMS_RANDOM.VALUE(TO_CHAR(DATE '2000-01-01','J'),TO_CHAR(SYSDATE,'J'))),'J');
+        v_data2:= TO_DATE(TRUNC(DBMS_RANDOM.VALUE(TO_CHAR(v_data1,'J'),TO_CHAR(SYSDATE,'J'))),'J');
+        insert into mentenanta values(v_i,TRUNC(DBMS_RANDOM.Value(1,3000)),TRUNC(DBMS_RANDOM.Value(1,319)),v_data1,v_data2);
+    end loop;
 
-  DBMS_OUTPUT.PUT_LINE('Se insereaza trenurile..');
-  
-  FOR v_i IN 1..1300 LOOP --Numarul estimat de trenuri puse in circulatie zilnic
-  
-    /* -- Un atribut aditional pentru tabela 'trenuri': Nume_Tren. Poate fi implementat ca obiectiv secundar: in realitate, numele trenurilor este un intreg cuprins intre 200 si 15000, prefixat corespunzator fie de 'R ', fie de 'IR '
-    LOOP
-      v_tren_id := TRUNC(DBMS_RANDOM.VALUE(200, 15000));
-      EXIT WHEN v_tren_id < 500 OR v_tren_id > 599; -- trenurile avand codul intre 500 si 600 reprezentau o clasa speciala de trenuri, care au fost scoase din functiune
-    END LOOP;
-    
-    IF(v_tren_id >= 2000 AND v_tren_id <= 9999) THEN -- acestea sunt trenurile Regio
-      v_nume_tren := 'R ' || TO_CHAR(v_tren_id);
-    ELSE
-      v_nume_tren := 'IR ' || TO_CHAR(v_tren_id); -- acestea sunt trenurile InterRegio
-    END IF;
-    */
-    
-    v_ora_plecare := (SYSDATE - TRUNC(DBMS_RANDOM.VALUE(0,1000)));
-    v_ora_sosire := (SYSDATE - TRUNC(DBMS_RANDOM.VALUE(0, 1000)));
-    
-    v_intarziere := SYSDATE - TRUNC(DBMS_RANDOM.VALUE(0, 1000));
-    
-    v_numar_vagoane := TRUNC(DBMS_RANDOM.VALUE(1, 12));
-    
-    v_stare_tren := lista_stari_tren(TRUNC(DBMS_RANDOM.VALUE(0, lista_stari_tren.count)) + 1);
-    
-    LOOP
-      SELECT * INTO v_statie_plecare FROM (SELECT id_statie FROM statii ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM = 1;
-      SELECT * INTO v_statie_sosire FROM (SELECT id_statie FROM statii ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM = 1;
-      EXIT WHEN v_statie_plecare <> v_statie_sosire;
-    END LOOP;
-    
-    SELECT * INTO v_statie_domiciliu FROM (SELECT id_statie FROM statii ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM = 1;
-    
-    INSERT INTO trenuri VALUES(v_i, v_ora_plecare, v_ora_sosire, v_statie_plecare, v_statie_sosire, v_intarziere, v_statie_domiciliu, v_numar_vagoane, v_stare_tren);
-  END LOOP;
-  
-  DBMS_OUTPUT.PUT_LINE('Trenurile au fost inserate.');
-  
-  DBMS_OUTPUT.PUT_LINE('Se insereaza biletele..');
-  
-  FOR v_i IN 1..10000 LOOP
-    
-    v_data_bilet := SYSDATE - TRUNC(DBMS_RANDOM.VALUE(0, 1000));
-    
-    SELECT * INTO v_statie_cumparare FROM (SELECT id_statie FROM statii ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM = 1;
-    
-    LOOP
-      SELECT * INTO v_statie_urcare FROM (SELECT id_statie FROM statii ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM = 1;
-      SELECT * INTO v_statie_coborare FROM (SELECT id_statie FROM statii ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM = 1;
-      EXIT WHEN v_statie_urcare <> v_statie_coborare;
-    END LOOP;
-    
-    SELECT * INTO v_bilet_tren FROM (SELECT id_tren FROM trenuri ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM = 1;
-    
-    INSERT INTO bilete VALUES(v_i, v_statie_cumparare, v_statie_urcare, v_statie_coborare, v_bilet_tren, DBMS_RANDOM.VALUE(1, 12), DBMS_RANDOM.VALUE(11, 111), v_data_bilet);
-  END LOOP;
-  
-    DBMS_OUTPUT.PUT_LINE('Biletele au fost inserate.');
+  -- Se insereaza Traseele
+    For v_i in 1..10000 loop
+        --statiile tinta
+        v_adresa1:= TRUNC(DBMS_RANDOM.Value(1,319));
+        v_adresa2:= TRUNC(DBMS_RANDOM.Value(1,319));
+        if v_adresa2 = v_adresa1 then
+        v_adresa1:= TRUNC(DBMS_RANDOM.Value(1,319));
+        v_adresa2:= TRUNC(DBMS_RANDOM.Value(1,319));
+        end if ;
 
-    DBMS_OUTPUT.PUT_LINE('Se insereaza procesele de mentenanta..');
-    
-    FOR v_i IN 1..1000 LOOP
-    
-      v_data_adaugare := SYSDATE - TRUNC(DBMS_RANDOM.VALUE(0, 1000));
-      v_data_eliberare := SYSDATE - TRUNC(DBMS_RANDOM.VALUE(0, 1000));
-      
-      SELECT * INTO v_mentenanta_tren FROM (SELECT id_tren FROM trenuri ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM = 1;
-      
-      SELECT * INTO v_mentenanta_statie FROM (SELECT id_statie FROM statii ORDER BY DBMS_RANDOM.VALUE) WHERE ROWNUM = 1;
-      
-      INSERT INTO mentenanta VALUES(v_i, v_mentenanta_tren, v_mentenanta_statie, v_data_adaugare, v_data_eliberare);
-    END LOOP;
-    
-    DBMS_OUTPUT.PUT_LINE('Procesele de mentenanta au fost inserate.');
-END;
+        --orele de plecare/sosire
+        v_ora1:= trunc(sysdate) + DBMS_RANDOM.Value(0,1);
+        v_ora2:= trunc(sysdate) + DBMS_RANDOM.Value(v_ora1-trunc(v_ora1),1);
+
+        insert into traseu values(v_i,v_ora1,v_ora2,v_adresa1,v_adresa2,0,TRUNC(DBMS_RANDOM.Value(1,3000)),TRUNC(DBMS_RANDOM.Value(1,6)),'Operational');
+    end loop;
+
+  --Biletele
+
+        for v_i in 1..10000 loop
+            select numar_vagoane into v_vagoane from traseu where id_traseu=v_i;
+            v_data1:= TO_DATE(TRUNC(DBMS_RANDOM.VALUE(TO_CHAR(DATE '2000-01-01','J'),TO_CHAR(SYSDATE,'J'))),'J');
+                v_increment_loc:=11;
+                v_increment_vagon:=1;
+                v_nr_locuri_ocupate:= DBMS_RANDOM.VALUE(20,v_vagoane*100);
+                for v_v in 1..v_nr_locuri_ocupate loop
+                    insert into bilete values (v_increment,v_i,trunc(DBMS_RANDOM.VALUE(1,319)),v_increment_vagon,v_increment_loc,v_data1);
+                    v_increment:= v_increment+1;
+                    v_increment_loc:= v_increment_loc+1;
+                    exit when v_increment_vagon= v_vagoane and v_increment_loc=111;
+                    if (v_increment_loc=111) then
+                        v_increment_vagon:= v_increment_vagon+1;
+                        v_increment_loc:=11;
+                    end if;
+                end loop;
+        end loop;
+  DBMS_OUTPUT.PUT_LINE('Valorile au fost inserate.');
+  end;
