@@ -22,7 +22,7 @@
                     margin: 0;
                     padding: 0;
                     overflow: hidden;
-                    border: 1px solid #e7e7e7;
+                    border: 0px solid #e7e7e7;
                     background-color: #f3f3f3;
                     position: fixed;
                     width: 100%;
@@ -62,7 +62,7 @@
                 .display-container { position: relative; }
 
                 .trains-image {
-                    background-image: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5), #04c6ed), url("trains.jpg");
+                    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url("trains.jpg");
                     height: 100%;
                     background-position: center;
                     background-repeat: no-repeat;
@@ -83,10 +83,10 @@
 
                 .routes-panel {
                     text-align: center;
-                    color: black;
+                    color: white;
                     border-radius: 25px;
                     border-color: #000000;
-                    background-color: #f2f2f2;
+                    /*background-color: #f2f2f2; */
                     padding: 0px;
                     width: 450px;
                     margin-left: auto;
@@ -142,7 +142,7 @@
 
                 input[type=text], select {
                     width: 55%;
-                    float: left;
+                    float: center;
                     padding: 12px 20px;
                     margin: 8px 0;
                     margin-right: 5%;
@@ -196,17 +196,63 @@
 
         <div class="trains-image">
             <ul>
-            <li><a class="active" href="index.html">Acasă</a></li>
-            <li><a href="#bottom">Rute trenuri</a></li>
+            <li><a class="active" href="index.html">Rute trenuri</a></li>
             <li><a href="tren.html">Caută după tren</a></li>
             <li><a href="statie.html">Caută după stație</a></li>
         </ul>
 
             <div class="hero-text">
-                <h1 style="font-size:50px">Starea trenurilor</h1>
+                <h1 style="font-size:50px">Rutele trenurilor</h1>
+
+<div id="bottom" class="routes-panel">
+            
+                <!--
+                <h1 style="font-size:30px">Rute de călătorie</h1>
+                -->
+            
+        
+
+    <form action="/action_page.php">
+            <br><br><b><font size="+2">Numele stațiilor:</font></b><br><br><br>
+
+                <input type="text" name="station1" placeholder="Stație de plecare.." required><br><br>
+                <input type="text" name="station2" placeholder="Stație de sosire.." required><br><br>
+
+            <!--
+                <label>Stație de plecare:</label>
+                <select name="statie1" required>
+                    <option value="arad">Arad</option>
+                    <option value="iasi">Iasi</option>
+                </select>
+
+                <label>Stație de sosire:</label>
+                <select name="statie2" class="select" required>
+                </select>
+            -->
+
+                <br><p><b class="date"><font size="+2">Data plecării:</font></b></p><br>
+                <input type="date" name="date"><br><br>
+                <input type="submit" value="Caută"><br><br>
+
+    </form>
+
+        <!--
+        <form>
+            <br><br>Data plecării:<br><br>
+                <input type="date" name="date">
+        </form>
+
+        <br><br>
+        <input type="submit" value="Caută">
+        -->
+        
+    </div>
+
+                <!--
                 <form method="get" action="#bottom">
                     <button>Vezi rute</button>
                 </form>
+                -->
 
 <!--
                 <button class="button display-left" onclick="plusDivs(-1)">&#10094;</button>
@@ -225,6 +271,8 @@
             <button class="button display-right" onclick="plusDivs(1)">&#10095;</button>
         </div>
         -->
+
+<!--
 
         <script>
             var slideIndex = 1;
@@ -255,16 +303,15 @@
                 <h1 style="font-size:30px">Rute de călătorie</h1>
                 -->
             
-        
+        <!--
 
     <form action="/action_page.php">
             <br><br><b>Numele stațiilor:</b><br><br><br>
 
-                <!--
                 <input type="text" name="station1" placeholder="Stație de plecare.." required><br><br>
                 <input type="text" name="station2" placeholder="Stație de sosire.." required><br><br>
-                -->
 
+            <!--
                 <label>Stație de plecare:</label>
                 <select name="statie1" required>
                     <option value="arad">Arad</option>
@@ -273,10 +320,10 @@
 
                 <label>Stație de sosire:</label>
                 <select name="statie2" class="select" required>
-                    <option value="arad">Arad</option>
-                    <option value="iasi">Iasi</option>
                 </select>
+            -->
 
+<!--
                 <br><p><b class="date">Data plecării:</b></p><br>
                 <input type="date" name="date"><br><br>
                 <input type="submit" value="Caută"><br><br>
@@ -293,8 +340,11 @@
         <input type="submit" value="Caută">
         -->
         
+<!--
     </div>
 
 <br><br>
+
+-->
     </body>
 </html>
