@@ -143,3 +143,5 @@ BEGIN
         end loop;
   DBMS_OUTPUT.PUT_LINE('Valorile au fost inserate.');
   end;
+
+Create index Bilete_Rapide on BILETE (id_traseu);
