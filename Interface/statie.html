@@ -11,6 +11,36 @@
                     font-family: Arial, Helvetica, sans-serif;
                 }
 
+                ul {
+                    list-style-type: none;
+                    margin: 0;
+                    padding: 0;
+                    overflow: hidden;
+                    border: 1px solid #e7e7e7;
+                    background-color: #f3f3f3;
+                }
+
+                li {
+                    float: left;
+                }
+
+                li a {
+                    display: block;
+                    color: #666;
+                    text-align: center;
+                    padding: 14px 16px;
+                    text-decoration: none;
+                }
+
+                li a:hover:not(.active) {
+                    background-color: #ddd;
+                }
+
+                li a.active {
+                    color: white;
+                    background-color: #04c6ed;
+                }
+
                 .header {
                     padding: 1px;
                     background: white;
@@ -114,14 +144,25 @@
             </style>
     </head>
 
-    <body>
+    <body>	
 
         <div class="trains-image">
+
+        <!--
             <div class="header">
                 <a class="nav-link text-dark text-underline" href="rute.html">Rute trenuri</a>
                 <a class="nav-link text-dark text-underline" href="tren.html">Caută după tren</a>
                 <a class="nav-link text-dark text-underline" href="statie.html">Caută după stație</a>
         </div>
+        -->
+
+        <ul>
+            <li><a href="index.html">Acasă</a></li>
+            <li><a href="rute.html">Rute trenuri</a></li>
+            <li><a href="tren.html">Caută după tren</a></li>
+            <li><a class="active" href="statie.html">Caută după stație</a></li>
+        </ul>
+
             <div class="hero-text">
                 <h1 style="font-size:50px">Caută după stație</h1>
                 <!--
