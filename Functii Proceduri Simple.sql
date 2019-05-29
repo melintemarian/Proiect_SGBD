@@ -1,5 +1,5 @@
 Drop function Cautare_Trasee;
-create or replace function Cautare_Trasee(statia_plecare in varchar2,statia_sosire in varchar2,data date)
+create or replace function Cautare_Trasee(statia_plecare in varchar2,statia_sosire in varchar2)
 return SYS_REFCURSOR
 is
     cursorul SYS_REFCURSOR;
@@ -38,7 +38,7 @@ is
     /
 
 drop function  Cautare_Statii_Sosire;
-create or replace function Cautare_Statii_Sosire(denumire_statie in varchar2,data date)
+create or replace function Cautare_Statii_Sosire(denumire_statie in varchar2)
 return sys_refcursor
 is
     cursorul sys_refcursor;
