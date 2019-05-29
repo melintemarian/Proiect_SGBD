@@ -11,6 +11,12 @@
                     font-family: Arial, Helvetica, sans-serif;
                 }
 
+                label {
+                    width: 40%;
+                    float: left;
+                    padding-top: 20px;
+                }
+
                 ul {
                     list-style-type: none;
                     margin: 0;
@@ -79,9 +85,10 @@
                     text-align: center;
                     color: black;
                     border-radius: 25px;
+                    border-color: #000000;
                     background-color: #f2f2f2;
                     padding: 0px;
-                    width: 30%;
+                    width: 450px;
                     margin-left: auto;
                     margin-right: auto;
                 }
@@ -134,10 +141,12 @@
                 }
 
                 input[type=text], select {
-                    width: 90%;
+                    width: 55%;
+                    float: left;
                     padding: 12px 20px;
                     margin: 8px 0;
-                    display: inline-block;
+                    margin-right: 5%;
+                  /*  display: inline-block; */
                     border: 1px solid #ccc;
                     border-radius: 4px;
                     box-sizing: border-box;
@@ -145,7 +154,7 @@
 
                 input[type=submit] {
                     width: 30%;
-                    background-color: #4CAF50;
+                    background-color: #04c6ed;
                     color: white;
                     padding: 14px 20px;
                     margin: 8px 0;
@@ -155,7 +164,29 @@
                 }
 
                 input[type=submit]:hover {
-                    background-color: #45a049;
+                    background-color: #04acce;
+                }
+
+                input[type=date] {
+                    width: 90%;
+                    padding: 12px 20px;
+                    margin: 8px 0;
+                    display: inline-block;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                    box-sizing: border-box;
+                }
+
+                bgcolor {
+                    background-image: linear-gradient(#04c6ed, #000000);
+                }
+
+                .date {
+                    margin-bottom: 10px;
+                }
+
+                .select {
+                    margin-bottom: 50px;
                 }
 
             </style>
@@ -166,7 +197,7 @@
         <div class="trains-image">
             <ul>
             <li><a class="active" href="index.html">Acasă</a></li>
-            <li><a href="rute.html">Rute trenuri</a></li>
+            <li><a href="#bottom">Rute trenuri</a></li>
             <li><a href="tren.html">Caută după tren</a></li>
             <li><a href="statie.html">Caută după stație</a></li>
         </ul>
@@ -227,12 +258,29 @@
         
 
     <form action="/action_page.php">
-            <br><br><b>Numele stațiilor:</b><br><br>
+            <br><br><b>Numele stațiilor:</b><br><br><br>
+
+                <!--
                 <input type="text" name="station1" placeholder="Stație de plecare.." required><br><br>
                 <input type="text" name="station2" placeholder="Stație de sosire.." required><br><br>
-                <b>Data plecării:</b><br><br>
+                -->
+
+                <label>Stație de plecare:</label>
+                <select name="statie1" required>
+                    <option value="arad">Arad</option>
+                    <option value="iasi">Iasi</option>
+                </select>
+
+                <label>Stație de sosire:</label>
+                <select name="statie2" class="select" required>
+                    <option value="arad">Arad</option>
+                    <option value="iasi">Iasi</option>
+                </select>
+
+                <br><p><b class="date">Data plecării:</b></p><br>
                 <input type="date" name="date"><br><br>
                 <input type="submit" value="Caută"><br><br>
+
     </form>
 
         <!--
@@ -248,7 +296,5 @@
     </div>
 
 <br><br>
-
-<a name="testword">
     </body>
 </html>
