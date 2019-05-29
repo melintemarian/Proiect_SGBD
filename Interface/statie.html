@@ -190,6 +190,61 @@
                     margin-bottom: 50px;
                 }
 
+body {
+  font: 16px Arial; 
+}
+
+.autocomplete {
+  /*the container must be positioned relative:*/
+  position: relative;
+  display: inline-block;
+}
+
+input {
+  border: 1px solid transparent;
+  background-color: #f1f1f1;
+  padding: 10px;
+  font-size: 16px;
+}
+
+input[type=text] {
+  background-color: #f1f1f1;
+  width: 100%;
+}
+
+input[type=submit] {
+  background-color: DodgerBlue;
+  color: #fff;
+}
+.autocomplete-items {
+  position: absolute;
+  border: 1px solid #d4d4d4;
+  border-bottom: none;
+  border-top: none;
+  z-index: 99;
+  /*position the autocomplete items to be the same width as the container:*/
+  top: 100%;
+  left: 0;
+  right: 0;
+  margin-top: -40px;
+}
+.autocomplete-items div {
+  padding: 10px;
+  cursor: pointer;
+  background-color: #f1f1f1; 
+  border-bottom: 1px solid #d4d4d4; 
+  color: black;
+}
+.autocomplete-items div:hover {
+  /*when hovering an item:*/
+  background-color: #e9e9e9; 
+}
+.autocomplete-active {
+  /*when navigating through the items using the arrow keys:*/
+  background-color: DodgerBlue !important; 
+  color: #ffffff; 
+}
+
             </style>
     </head>
 
@@ -197,7 +252,7 @@
 
         <div class="trains-image">
             <ul>
-            <li><a href="rute.html">Rute trenuri</a></li>
+            <li><a href="index.html">Rute trenuri</a></li>
             <li><a href="tren.html">Caută după tren</a></li>
             <li><a class="active" href="statie.html">Caută după stație</a></li>
         </ul>
@@ -213,7 +268,7 @@
             
         
 
-    <form action="/action_page.php">
+    <form autocomplete="off" action="/action_page.php">
 
             <!--
             <br><br><b>Număr tren:</b><br><br><br>
@@ -228,7 +283,9 @@
                 </select>
             -->
 
-            <input type="text" name="station" placeholder="Numele stației.." required>
+        <div class="autocomplete" style="width:300px;">
+            <input id="myInput" type="text" name="station" placeholder="Numele stației.." required>
+        </div>
 
 
                 <br><p><b class="date"><font size="+2">Data:</font></b></p><br>
@@ -288,6 +345,129 @@
                 x[slideIndex - 1].style.display = "block";
             }
         </script>
+-->
+
+<script>
+
+            function autocomplete ( inp, arr ) {
+                var currentFocus;
+
+                inp.addEventListener ( "input", function ( e ) {
+                    var a, b, i, val = this.value;
+
+                    /* close any already open lists of autocompleted values */
+                    closeAllLists();
+
+                    if ( !val ) { return false; }
+
+                    currentFocus = -1;
+
+                    /* create a DIV element that will contain the items ( values ): */
+                        a = document.createElement ( "DIV" );
+                        a.setAttribute ( "id", this.id + "autocomplete-list" );
+                        a.setAttribute ( "class", "autocomplete-items" );
+
+                    /* append the DIV element as a child of the autocomplete container: */
+                    this.parentNode.appendChild ( a );
+
+                    /* for each item in the array...*/
+                    for ( i = 0; i < arr.length; i++ ) {
+                        /* check if the item starts with the same letters as the text field value: */
+                        if ( arr[i].substr ( 0, val.length ).toUpperCase() == val.toUpperCase() ) {
+                            /* create a DIV element for each matching element: */
+                            b = document.createElement ( "DIV" );
+
+                            /* make the matching letters bold: */
+                            b.innerHTML = "<strong>" + arr[i].substr ( 0, val.length ) + "</strong>";
+                            b.innerHTML += arr[i].substr ( val.length );
+
+                            /* insert an input field that will hold the current array item's value: */
+                            b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
+
+                            /* execute a function when someone clicks on the item value (DIV element): */
+                            b.addEventListener ( "click", function ( e ) {
+
+                                /* insert the value for the autocomplete text field: */
+                                inp.value = this.getElementsByTagName ( "input" )[0].value;
+
+                                /* close the list of autocompleted values (or any other open lists of autocompleted values) */
+                                closeAllLists();
+                            } );
+
+                            a.appendChild ( b );
+                        }
+                    }
+                } );
+
+                /* execute a function when a key on the keyboard is pressed */
+                inp.addEventListener ( "keydown", function ( e ) {
+                    var x = document.getElementById ( this.id + "autocomplete-list" );
+                    if ( x ) x = x.getElementsByTagName ( "div" );
+                    if ( e.keyCode == 40 ) {
+                        /* If the arrow DOWN key is pressed, increase the currentFocus variable: */
+                    currentFocus++;
+                    /* and make the current item more visible */
+                    addActive ( x );
+                    } else if ( e.keyCode == 38 ) {
+                        /* If the arrow UP key is pressed, decrease the currentFocus variable: */
+                        currentFocus--;
+                        /* and make the current item more visible */
+                        addActive ( x );
+                    } else if ( e.keyCode == 13 ) {
+                        /* If the ENTER key is pressed, prevent the from from being submitted */
+                        e.preventDefault();
+                        if ( currentFocus > -1 ) {
+                            /* and simulate a click on the "active" item */
+                            if ( x ) x[currentFocus].click();
+                        }
+                    }
+                } );
+
+                function addActive ( x ) {
+                    /* a function to classify an item as "active" */
+                    if ( !x ) return false;
+
+                    /* start by removing the "active" class on all items */
+                    removeActive ( x );
+
+                    if ( currentFocus >= x.length ) currentFocus = 0;
+                    if ( currentFocus < 0 ) currentFocus = ( x.length - 1 );
+
+                    /* add class "autocomplete-active" */
+                    x[currentFocus].classList.add ( "autocomplete-active" );
+                }
+
+                function removeActive ( x ) {
+                    /* a function to remove the "active" class from all autocomplete items: */
+                    for ( var i = 0; i < x.length; i++ ) {
+                        x[i].classList.remove ( "autocomplete-active" );
+                    }
+                }
+
+                function closeAllLists ( elmnt ) {
+                    /* close all autocomplete lists in the document, except the one passed as an argument: */
+                    var x = document.getElementsByClassName ( "autocomplete-items" );
+
+                    for ( var i = 0; i < x.length; i++ ) {
+                        if ( elmnt != x[i] && elmnt != inp ) {
+                            x[i].parentNode.removeChild ( x[i] );
+                        }
+                    }
+                }
+
+                /* execute a function when someone clicks in the document */
+                document.addEventListener ( "click", function ( e ) {
+                    closeAllLists ( e.target );
+                } );
+            }
+
+var stations = ["Abrud","Adjud","Agnita","Aiud","Alba Iulia","Aleșd","Alexandria","Amara","Anina","Aninoasa","Arad","Ardud","Avrig","Azuga","Babadag","Băbeni","Bacău","Baia de Aramă","Baia de Arieș","Baia Mare","Baia Sprie","Băicoi","Băile Govora","Băile Herculane","Băile Olănești","Băile Tușnad","Băilești","Bălan","Bălcești","Balș","Baraolt","Bârlad","Bechet","Beclean","Beiuș","Berbești","Berești","Bicaz","Bistrița","Blaj","Bocșa","Boldești-Scăeni","Bolintin-Vale","Borșa","Borsec","Botoșani","Brad","Bragadiru","Brăila","Brașov","Breaza","Brezoi","Broșteni","Bucecea","București","Budești","Buftea","Buhuși","Bumbești-Jiu","Bușteni","Buzău","Buziaș","Cajvana","Calafat","Călan","Călărași","Călimănești","Câmpeni","Câmpia Turzii","Câmpina","Câmpulung Moldovenesc","Câmpulung","Caracal","Caransebeș","Carei","Cavnic","Căzănești","Cehu Silvaniei","Cernavodă","Chișineu-Criș","Chitila","Ciacova","Cisnădie","Cluj-Napoca","Codlea","Comănești","Comarnic","Constanța","Copșa Mică","Corabia","Costești","Covasna","Craiova","Cristuru Secuiesc","Cugir","Curtea de Argeș","Curtici","Dăbuleni","Darabani","Dărmănești","Dej","Deta","Deva","Dolhasca","Dorohoi","Drăgănești-Olt","Drăgășani","Dragomirești","Drobeta-Turnu Severin","Dumbrăveni","Eforie","Făgăraș","Făget","Fălticeni","Făurei","Fetești","Fieni","Fierbinți-Târg","Filiași","Flămânzi","Focșani","Frasin","Fundulea","Găești","Galați","Gătaia","Geoagiu","Gheorgheni","Gherla","Ghimbav","Giurgiu","Gura Humorului","Hârlău","Hârșova","Hațeg","Horezu","Huedin","Hunedoara","Huși","Ianca","Iași","Iernut","Ineu","Însurăței","Întorsura Buzăului","Isaccea","Jibou","Jimbolia","Lehliu Gară","Lipova","Liteni","Livada","Luduș","Lugoj","Lupeni","Măcin","Măgurele","Mangalia","Mărășești","Marghita","Medgidia","Mediaș","Miercurea Ciuc","Miercurea Nirajului","Miercurea Sibiului","Mihăilești","Milișăuți","Mioveni","Mizil","Moinești","Moldova Nouă","Moreni","Motru","Murfatlar","Murgeni","Nădlac","Năsăud","Năvodari","Negrești","Negrești-Oaș","Negru Vodă","Nehoiu","Novaci","Nucet","Ocna Mureș","Ocna Sibiului","Ocnele Mari","Odobești","Odorheiu Secuiesc","Oltenița","Onești","Oradea","Orăștie","Oravița","Orșova","Oțelu Roșu","Otopeni","Ovidiu","Panciu","Pâncota","Pantelimon","Pașcani","Pătârlagele","Pecica","Petrila","Petroșani","Piatra Neamț","Piatra-Olt","Pitești","Ploiești","Plopeni","Podu Iloaiei","Pogoanele","Popești-Leordeni","Potcoava","Predeal","Pucioasa","Răcari","Rădăuți","Râmnicu Sărat","Râmnicu Vâlcea","Râșnov","Recaș","Reghin","Reșița","Roman","Roșiorii de Vede","Rovinari","Roznov","Rupea","Săcele","Săcueni","Salcea","Săliște","Săliștea de Sus","Salonta","Sângeorgiu de Pădure","Sângeorz-Băi","Sânnicolau Mare","Sântana","Sărmașu","Satu Mare","Săveni","Scornicești","Sebeș","Sebiș","Segarcea","Seini","Sfântu Gheorghe","Sibiu","Sighetu Marmației","Sighișoara","Simeria","Șimleu Silvaniei","Sinaia","Siret","Slănic","Slănic-Moldova","Slatina","Slobozia","Solca","Șomcuta Mare","Sovata","Ștefănești, Argeș","Ștefănești, Botoșani","Ștei","Strehaia","Suceava","Sulina","Tălmaciu","Țăndărei","Târgoviște","Târgu Bujor","Târgu Cărbunești","Târgu Frumos","Târgu Jiu","Târgu Lăpuș","Târgu Mureș","Târgu Neamț","Târgu Ocna","Târgu Secuiesc","Târnăveni","Tășnad","Tăuții-Măgherăuș","Techirghiol","Tecuci","Teiuș","Țicleni","Timișoara","Tismana","Titu","Toplița","Topoloveni","Tulcea","Turceni","Turda","Turnu Măgurele","Ulmeni","Ungheni","Uricani","Urlați","Urziceni","Valea lui Mihai","Vălenii de Munte","Vânju Mare","Vașcău","Vaslui","Vatra Dornei","Vicovu de Sus","Victoria","Videle","Vișeu de Sus","Vlăhița","Voluntari","Vulcan","Zalău","Zărnești","Zimnicea","Zlatna"];
+
+autocomplete(document.getElementById("myInput"), stations);
+
+</script>
+
+<!--
 
         
 <br><br>
