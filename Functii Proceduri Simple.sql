@@ -1,5 +1,5 @@
 Drop function Cautare_Trasee;
-create or replace function Cautare_Trasee(statia_plecare in varchar2,statia_sosire in varchar2)
+create or replace function Cautare_Trasee(statia_plecare in varchar2,statia_sosire in varchar2,data date)
 return SYS_REFCURSOR
 is
     cursorul SYS_REFCURSOR;
@@ -9,7 +9,7 @@ is
             if(statia_sosire=NULL or statia_sosire=NULL) then
             raise input_inexistent;
             end if;
-            Open cursorul for select st.nume_statie,ss.NUME_STATIE,tr.ORA_PLECARE,tr.ORA_SOSIRE,ID_TRASEU from statii st
+            Open cursorul for select st.nume_statie,ss.NUME_STATIE,tr.ORA_PLECARE-floor(tr.ORA_PLECARE)+data,tr.ORA_SOSIRE-floor(tr.ORA_SOSIRE)+data,ID_TRASEU from statii st
             join TRASEU tr on st.ID_STATIE=tr.ID_STATIE_PLECARE
             join statii ss on tr.ID_STATIE_SOSIRE=ss.ID_STATIE
             where st.NUME_STATIE=statia_plecare and ss.Nume_statie=statia_sosire;
@@ -23,7 +23,7 @@ is
     /
 
 drop function  Cautare_Statii_Plecare;
-create or replace function Cautare_Statii_Plecare(denumire_statie in varchar2)
+create or replace function Cautare_Statii_Plecare(denumire_statie in varchar2,data date)
 return sys_refcursor
 is
     cursorul sys_refcursor;
@@ -34,7 +34,7 @@ is
             raise input_inexistent;
             end if;
             Open cursorul for
-                select st.NUME_STATIE,ss.NUME_STATIE,ORA_PLECARE,ID_TRASEU from statii st
+                select st.NUME_STATIE,ss.NUME_STATIE,ORA_PLECARE-floor(ORA_PLECARE)+data,ID_TRASEU from statii st
                 join traseu ts on ts.ID_STATIE_PLECARE=st.ID_STATIE
                 join statii ss on ss.ID_STATIE=ts.ID_STATIE_SOSIRE
                 where st.NUME_STATIE=trim(denumire_statie);
@@ -48,7 +48,7 @@ is
     /
 
 drop function  Cautare_Statii_Sosire;
-create or replace function Cautare_Statii_Sosire(denumire_statie in varchar2)
+create or replace function Cautare_Statii_Sosire(denumire_statie in varchar2,data date)
 return sys_refcursor
 is
     cursorul sys_refcursor;
@@ -59,7 +59,7 @@ is
             raise input_inexistent;
             end if;
             Open cursorul for
-                select ss.NUME_STATIE,st.NUME_STATIE,ORA_SOSIRE,ID_TRASEU from statii st
+                select ss.NUME_STATIE,st.NUME_STATIE,ORA_SOSIRE-floor(ORA_SOSIRE)+data,ID_TRASEU from statii st
                 join traseu ts on ts.ID_STATIE_SOSIRE=st.ID_STATIE
                 join statii ss on ss.ID_STATIE=ts.ID_STATIE_PLECARE
                 where st.NUME_STATIE=trim(denumire_statie);
