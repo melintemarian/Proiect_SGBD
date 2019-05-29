@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html>
-    <title>Starea trenurilor</title>
+    <title>Rutele trenurilor</title>
 
     <head>
         <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -62,7 +62,7 @@
                 .display-container { position: relative; }
 
                 .trains-image {
-                    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6) ), url("trains.jpg");
+                    background-image: linear-gradient( rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6), #000000),  url("trains.jpg");
                     height: 100%;
                     background-position: center;
                     background-repeat: no-repeat;
@@ -255,7 +255,7 @@ input[type=submit] {
             </style>
     </head>
 
-    <body bgcolor="#04c6ed">
+    <body bgcolor="#000000">
 
         <div class="trains-image">
             <ul>
@@ -275,15 +275,15 @@ input[type=submit] {
             
         
 
-    <form autocomplete="off" action="/action_page.php">
+    <form autocomplete="off" action="/action_page.php" method="get">
             <br><br><b><font size="+2">Numele stațiilor:</font></b><br><br><br>
 
             <div class="autocomplete" style="width:300px;">
-                <input id="myInput" type="text" name="station1" placeholder="Stație de plecare.." required><br><br>
+                <input id="myInput" type="text" name="statiePlecare" placeholder="Stație de plecare.." required><br><br>
             </div>
 
             <div class="autocomplete2" style="width:300px;">
-                <input id="myInput2" type="text" name="station2" placeholder="Stație de sosire.." required><br><br>
+                <input id="myInput2" type="text" name="statieSosire" placeholder="Stație de sosire.." required><br><br>
             </div>
             
 
@@ -300,7 +300,7 @@ input[type=submit] {
             -->
 
                 <br><p><b class="date"><font size="+2">Data plecării:</font></b></p><br>
-                <input type="date" name="date"><br><br>
+                <input type="date" name="data" value="2019-05-30" min="2019-05-30" max="2019-06-30"><br><br>
                 <input type="submit" value="Caută"><br><br>
 
     </form>
@@ -450,6 +450,21 @@ autocomplete(document.getElementById("myInput"), countries);
 autocomplete(document.getElementById("myInput2"), countries);
 
 </script>
+
+<?php
+    $statie1=$_GET['statiePlecare'];
+    $statie2=$_GET['statieSosire'];
+
+    $dbhost = "localhost";
+    $dbuser = "root";
+    $dbpass = "";
+    $db = "trenuri";
+
+    $conn = new OCILogon ( "system", "password", $db ) or die ( "Connect failed: %s\n". $conn -> error );
+
+    $var = "SELECT * FROM traseu WHERE v_adresa1 = ( SELECT id_statie FROM statii WHERE Nume_Statie = '$statie1' ) AND v_adresa2 = ( SELECT id_statie FROM statii WHERE Nume_Statie = '$statie2' )";
+
+?>
 
         <!--
         <div class="content">
