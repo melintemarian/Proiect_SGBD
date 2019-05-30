@@ -106,7 +106,7 @@ end;
 /
 
 Drop procedure Eliminiare_Intarziere;
-Create or replace  procedure Eliminiare_Intarziere(intarziere_s int, id_traseu_s int)
+Create or replace  procedure Eliminiare_Intarziere( id_traseu_s int)
 is
 begin
     update TRASEU set INTARZIERE=0 where ID_TRASEU=id_traseu_s;
